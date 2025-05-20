@@ -25,6 +25,7 @@ class wordpress (
   exec { 'download_wordpress':
     command => 'wget https://wordpress.org/latest.zip -O /tmp/wordpress.zip && unzip -o /tmp/wordpress.zip -d /tmp',
     creates => '/tmp/wordpress',
+    path    => ['/usr/bin', '/bin', '/usr/local/bin'],
     require => [ 
       Package['wget'],
       Package['unzip'],
