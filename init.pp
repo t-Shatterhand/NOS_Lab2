@@ -5,6 +5,9 @@ class wordpress (
   String $wp_db_password = 'wordpress',
 ) {
 
+  # Fetch the salt data
+  $salt_data = inline_template("<%= `curl -s https://api.wordpress.org/secret-key/1.1/salt/` %>")
+
   # Download required packages
   package { [
     'httpd',
@@ -41,19 +44,11 @@ class wordpress (
     ],
   }
 
-  # Ensure salt file is present
-  exec { 'download_wp_salts':
-    command => 'curl -s https://api.wordpress.org/secret-key/1.1/salt/ -o /tmp/wp-salts.php',
-    creates => '/tmp/wp-salts.php',
-    path    => ['/usr/bin', '/bin'],
-  }
-
   # Generate wp-config from template
   file { '/var/www/html/wp-config.php':
     ensure  => present,
     content => template('wordpress/wp-config.php.erb'),
     require => [
-      Exec['download_wp_salts'],
       Package['httpd'],
     ],
   }
