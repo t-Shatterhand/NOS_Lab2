@@ -53,19 +53,7 @@ class wordpress (
     ],
   }
 
-  # Ensure mariadb service runs
-  service { 'mariadb':
-    ensure => running,
-    enable => true,
-
-    require => [
-      Package['mariadb105'],
-      Package['mariadb105-server'],
-    ],
-  }
-
   class { 'mysql::server':
-    manage_package => false,
     root_password  => 'root_password', # Use your own strong password instead
   }
 
@@ -80,7 +68,6 @@ class wordpress (
 
     require => [
       Class['mysql::server'],
-      Service['mariadb'],
     ],
   }
 
