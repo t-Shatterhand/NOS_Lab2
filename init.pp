@@ -24,7 +24,7 @@ class wordpress (
     creates => '/var/www/html/index.php',
     path    => ['/usr/bin', '/bin', '/usr/local/bin'],
     require => [ 
-      Package['wget'],
+      Package['httpd'],
     ],
   }
 
