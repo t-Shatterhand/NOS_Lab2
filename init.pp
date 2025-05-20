@@ -41,13 +41,6 @@ class wordpress (
     ],
   }
 
-  # Download wp-config template
-  exec { 'download_config':
-    command => 'curl -s -o /tmp/wp-config.php.erb https://raw.githubusercontent.com/t-Shatterhand/NOS_Lab2/refs/heads/main/wp-config.php.erb',
-    creates => '/tmp/wp-config.php.erb',
-    path    => ['/usr/bin', '/bin'],
-  }
-
   # Ensure salt file is present
   exec { 'download_wp_salts':
     command => 'curl -s https://api.wordpress.org/secret-key/1.1/salt/ -o /tmp/wp-salts.php',
@@ -58,9 +51,8 @@ class wordpress (
   # Generate wp-config from template
   file { '/var/www/html/wp-config.php':
     ensure  => present,
-    content => template('/tmp/wp-config.php.erb'),
+    content => template('wordpress/wp-config.php.erb'),
     require => [
-      Exec['download_config'],
       Exec['download_wp_salts'],
       Package['httpd'],
     ],
