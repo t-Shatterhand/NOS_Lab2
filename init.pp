@@ -14,27 +14,24 @@ class wordpress (
     'php',
     'php-mysqlnd',
     'wget',
-    'unzip',
   ]:
     ensure => installed,
   }
 
   # Download latest wordpress
   exec { 'download_wordpress':
-    command => 'wget https://wordpress.org/latest.zip -O /tmp/wordpress.zip && unzip -o /tmp/wordpress.zip -d /tmp',
-    creates => '/tmp/wordpress',
+    command => 'curl -sLO https://wordpress.org/latest.tar.gz && tar -xzf latest.tar.gz --strip-components=1 -C /var/www/html',
+    creates => '/var/www/html/index.php',
     path    => ['/usr/bin', '/bin', '/usr/local/bin'],
     require => [ 
       Package['wget'],
-      Package['unzip'],
     ],
   }
 
-  # Copy wordpress into apache httpd folder
+  # Update owner and group for httpd
   file { '/var/www/html/wordpress':
     ensure  => directory,
     recurse => true,
-    source  => '/tmp/wordpress',
     owner   => 'apache',
     group   => 'apache',
     require => [
