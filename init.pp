@@ -13,8 +13,6 @@ class wordpress (
     'httpd',
     'php',
     'php-mysqlnd',
-    'mariadb105',
-    'mariadb105-server',
     'wget',
     'unzip',
   ]:
@@ -54,7 +52,12 @@ class wordpress (
     ],
   }
 
+  class { 'mysql::client':
+    package_name => 'mariadb105',
+  }
+
   class { 'mysql::server':
+    package_name => 'mariadb105-server',
     root_password  => 'root_password', # Use your own strong password instead
   }
 
